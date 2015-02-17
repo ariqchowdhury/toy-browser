@@ -28,7 +28,11 @@ pub struct Element {
 
 impl fmt::Display for Element {
 	fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-		write!(f, "|__Element: {:?}", self.e_type)
+		let mut text = self.text.clone();
+		match text {
+			Some(text) => write!(f, "|__Element: {:?}, Text: {}", self.e_type, text),
+			None    => write!(f, "|__Element: {:?}", self.e_type),
+		}
 	}
 }
 
@@ -51,6 +55,8 @@ pub fn pretty_print(doc: &Document) {
 fn pretty_print_element(depth: i32, e: &Element) {
 	let mut s = String::from_str("");
 	for _ in range(0, depth) {
+		s.push(' ');
+		s.push(' ');
 		s.push(' ');
 		s.push(' ');
 	}
