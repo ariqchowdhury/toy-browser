@@ -2,7 +2,7 @@ extern crate std;
 
 use std::fmt;
 
-#[derive(Show)]
+#[derive(Debug)]
 pub enum ElementType {
 	ClassE,
 	Head,
@@ -10,25 +10,25 @@ pub enum ElementType {
 	Body,
 }
 
-#[derive(Show)]
+#[derive(Debug)]
 pub enum Doctype {
 	Html,
 }
 
 pub struct Document {
 	d_type: Doctype,
-	element: Element,
+	pub element: Element,
 }
 
 pub struct Element {
 	e_type: ElementType,
 	text: Option<String>,
-	children: Vec<Element>,
+	pub children: Vec<Element>,
 }
 
 impl fmt::Display for Element {
 	fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-		write!(f, "\n    |__Element: {:?}", self.e_type)
+		write!(f, "|__Element: {:?}", self.e_type)
 	}
 }
 
@@ -43,14 +43,28 @@ impl Document {
 
 pub fn pretty_print(doc: &Document) {
 	println!("Document");
-	println!("|-- Doctype: {:?}", doc.d_type);
-	println!("|__ Element: {}", doc.element);
+	println!("|__Doctype: {:?}", doc.d_type);
+
+	pretty_print_element(0, &doc.element);
+}
+
+fn pretty_print_element(depth: i32, e: &Element) {
+	let mut s = String::from_str("");
+	for _ in range(0, depth) {
+		s.push(' ');
+		s.push(' ');
+	}
+	println!("{}{}", s, e);
+
+	for c in e.children.iter() {
+		pretty_print_element(depth + 1, c);
+	}
 }
 
 impl Element {
 
 	fn new_root (e_type: ElementType) -> Element {
-		let mut vec = Vec::new();
+		let vec = Vec::new();
 		Element {
 			e_type: e_type,
 			text: None,
@@ -59,7 +73,7 @@ impl Element {
 	}
 
 	pub fn add_child (&mut self, e_type: ElementType, text: Option<String>) {
-		let mut vec = Vec::new();
+		let vec = Vec::new();
 
 		let e = Element {
 			e_type: e_type,
