@@ -17,7 +17,7 @@ pub struct Document {
 pub struct Element {
 	e_type: ElementType,
 	text: Option<String>,
-	children: Vec<Box<Element>>,
+	children: Vec<Element>,
 }
 
 impl Document {
@@ -43,11 +43,11 @@ impl Element {
 	pub fn add_child (&mut self, e_type: ElementType, text: Option<String>) {
 		let mut vec = Vec::new();
 
-		let e = Box::new(Element {
+		let e = Element {
 			e_type: e_type,
 			text: text,
 			children: vec,
-		});
+		};
 
 		self.children.push(e);
 	}
