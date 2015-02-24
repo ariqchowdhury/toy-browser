@@ -22,15 +22,14 @@ pub struct Document {
 
 pub struct Element {
 	e_type: ElementType,
-	text: Option<String>,
+	text: Box<Option<String>>,
 	pub children: Vec<Element>,
 }
 
 impl fmt::Display for Element {
 	fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-		let mut text = self.text.clone();
-		match text {
-			Some(text) => write!(f, "|__Element: {:?}, Text: {}", self.e_type, text),
+		match *self.text {
+			Some(ref s) => write!(f, "|__Element: {:?}, Text: {}", self.e_type, *s),
 			None    => write!(f, "|__Element: {:?}", self.e_type),
 		}
 	}
@@ -71,19 +70,21 @@ impl Element {
 
 	fn new_root (e_type: ElementType) -> Element {
 		let vec = Vec::new();
+		let t : Box<Option<String>> = Box::new(None);
 		Element {
 			e_type: e_type,
-			text: None,
+			text: t,
 			children: vec,
 		}
 	}
 
-	pub fn add_child (&mut self, e_type: ElementType, text: Option<String>) {
+	pub fn add_child (&mut self, e_type: ElementType, mut text: Option<String>) {
 		let vec = Vec::new();
+		let t : Box<Option<String>> = Box::new(text);
 
 		let e = Element {
 			e_type: e_type,
-			text: text,
+			text: t.clone(),
 			children: vec,
 		};
 
