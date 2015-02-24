@@ -1,3 +1,5 @@
+#![feature(core)]
+
 #[cfg(test)]
 mod tests {
 	use super::*;
@@ -66,6 +68,5 @@ mod tests {
 		}
 	}	
 }
-
 
 pub mod dom_tree;

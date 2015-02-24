@@ -2,7 +2,7 @@ extern crate std;
 
 use std::fmt;
 
-#[derive(Debug)]
+#[derive(Debug, Copy)]
 pub enum ElementType {
 	ClassE,
 	Head,
@@ -10,7 +10,7 @@ pub enum ElementType {
 	Body,
 }
 
-#[derive(Debug)]
+#[derive(Debug, Copy)]
 pub enum Doctype {
 	Html,
 }
@@ -52,8 +52,8 @@ pub fn pretty_print(doc: &Document) {
 }
 
 fn pretty_print_element(depth: i32, e: &Element) {
-	let mut s = String::from_str("");
-	for _ in range(0, depth) {
+	let mut s = "".to_string();
+	for _ in 0..depth {
 		s.push(' ');
 		s.push(' ');
 		s.push(' ');
@@ -78,7 +78,7 @@ impl Element {
 		}
 	}
 
-	pub fn add_child (&mut self, e_type: ElementType, mut text: Option<String>) {
+	pub fn add_child (&mut self, e_type: ElementType, text: Option<String>) {
 		let vec = Vec::new();
 		let t : Box<Option<String>> = Box::new(text);
 
