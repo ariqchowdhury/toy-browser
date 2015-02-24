@@ -22,7 +22,7 @@ pub struct Document {
 
 pub struct Element {
 	e_type: ElementType,
-	text: Box<Option<String>>,
+	pub text: Box<Option<String>>,
 	pub children: Vec<Element>,
 }
 
