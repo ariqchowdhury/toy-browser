@@ -37,32 +37,32 @@ mod tests {
 		assert!(document.element.children[1].children[1].text.is_some());
 		assert!(document.element.children[1].children[2].text.is_some());
 
-		match *document.element.children[0].text {
+		match document.element.children[0].text {
 			Some(ref s) => if *s != "x" {assert!(false)},
 			None => assert!(false),
 		}
 
-		match *document.element.children[1].text {
+		match document.element.children[1].text {
 			Some(ref s) => if *s != "y" {assert!(false)},
 			None => assert!(false),
 		}
 
-		match *document.element.children[2].text {
+		match document.element.children[2].text {
 			Some(ref s) => if *s != "z" {assert!(false)},
 			None => assert!(false),
 		}
 
-		match *document.element.children[1].children[0].text {
+		match document.element.children[1].children[0].text {
 			Some(ref s) => if *s != "a" {assert!(false)},
 			None => assert!(false),
 		}
 
-		match *document.element.children[1].children[1].text {
+		match document.element.children[1].children[1].text {
 			Some(ref s) => if *s != "b" {assert!(false)},
 			None => assert!(false),
 		}
 
-		match *document.element.children[1].children[2].text {
+		match document.element.children[1].children[2].text {
 			Some(ref s) => if *s != "c" {assert!(false)},
 			None => assert!(false),
 		}
