@@ -7,11 +7,7 @@ mod tests {
 	#[test]
 	fn parser_consume_char() {
 		let test_string = "TeStInG sTrInG";
-
-		let mut p = parser::Parser { 
-			cursor: 0,
-			input: test_string.to_string(),
-		};
+		let mut p = parser::Parser::new(test_string.to_string());
 
 		for i in 0..14 {
 			match p.consume_char() {
@@ -20,6 +16,19 @@ mod tests {
 			}
 		}	
 
+	}
+
+	#[test]
+	fn parser_next_char() {
+		let test_string = "TeStInG sTrInG";
+		let mut p = parser::Parser::new(test_string.to_string());
+
+		for i in 0..14 {
+			match p.next_char() {
+				Some(c) => assert_eq!(test_string.char_at(0), c),
+				None => println!("Done"),
+			}
+		}	
 	}
 
 	#[test]
