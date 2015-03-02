@@ -24,7 +24,7 @@ mod tests {
 		let mut p = parser::Parser::new(test_string.to_string());
 
 		for i in 0..14 {
-			match p.next_char() {
+			match p.peek_char() {
 				Some(c) => assert_eq!(test_string.char_at(0), c),
 				None => println!("Done"),
 			}
