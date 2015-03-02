@@ -5,7 +5,25 @@ mod tests {
 	use super::*;
 
 	#[test]
-	fn check_add_child() {
+	fn parser_consume_char() {
+		let test_string = "TeStInG sTrInG";
+
+		let mut p = parser::Parser { 
+			cursor: 0,
+			input: test_string.to_string(),
+		};
+
+		for i in 0..14 {
+			match p.consume_char() {
+				Some(c) => assert_eq!(test_string.char_at(i), c),
+				None => println!("Done"),
+			}
+		}	
+
+	}
+
+	#[test]
+	fn dom_add_child() {
 		let s: Option<String> = Some("x".to_string());
 		let s2: Option<String> = Some("y".to_string());
 		let s3: Option<String> = Some("z".to_string());
@@ -70,3 +88,4 @@ mod tests {
 }
 
 pub mod dom_tree;
+pub mod parser;
