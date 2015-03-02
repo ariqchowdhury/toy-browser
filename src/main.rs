@@ -1,6 +1,6 @@
-extern crate browser;
+extern crate ac_browser;
 
-use browser::dom_tree;
+use ac_browser::dom_tree;
 
 fn main() {
 
