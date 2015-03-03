@@ -5,6 +5,18 @@ mod tests {
 	use super::*;
 
 	#[test]
+	fn html_parse_doctype() {
+		let proper_doctype = "<!DOCTYPE html>";
+		let p = parser::Parser::new(proper_doctype.to_string());
+		let mut html = html_parser::HtmlParser::new(p);
+
+		match html.parse_doctype() {
+			Some(_) => assert!(true),
+			None => assert!(false),
+		}
+	}
+
+	#[test]
 	fn parser_consume_char_if_match() {
 		let test_string = "FB";
 		let mut p = parser::Parser::new(test_string.to_string());
