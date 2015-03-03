@@ -27,7 +27,7 @@ impl Parser {
 
 	/// Return the current character tracked by cursor. Cursor remains at
 	/// current position
-	pub fn peek_char (&mut self) -> Option<char> {
+	pub fn peek_char(&mut self) -> Option<char> {
 		let mut current_char = self.input.chars().skip(self.cursor);
 
 		current_char.next()
@@ -36,7 +36,7 @@ impl Parser {
 	/// Consume characters until condition is false. Increase cursor
 	/// by number of chars consumed. 
 	/// Return a string of the consumed characters. 
-	fn consume_while<F: Fn(char) -> bool>(&mut self, cond: F) -> String {
+	pub fn consume_while<F: Fn(char) -> bool>(&mut self, cond: F) -> String {
 		let mut result = String::new();
 		let mut next_char : char;
 

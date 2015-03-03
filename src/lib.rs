@@ -23,7 +23,7 @@ mod tests {
 		let test_string = "TeStInG sTrInG";
 		let mut p = parser::Parser::new(test_string.to_string());
 
-		for i in 0..14 {
+		for _ in 0..14 {
 			match p.peek_char() {
 				Some(c) => assert_eq!(test_string.char_at(0), c),
 				None => println!("Done"),
@@ -36,7 +36,7 @@ mod tests {
 		let test_string = "     F";
 		let mut p = parser::Parser::new(test_string.to_string());
 
-		let white_str = p.consume_whitespace();
+		p.consume_whitespace();
 
 		match p.peek_char() {
 			Some(c) => assert_eq!('F', c),
@@ -106,8 +106,11 @@ mod tests {
 			Some(ref s) => if *s != "c" {assert!(false)},
 			None => assert!(false),
 		}
-	}	
+	}
+
+		
 }
 
 pub mod dom_tree;
 pub mod parser;
+pub mod html_parser;
