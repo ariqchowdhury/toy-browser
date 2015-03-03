@@ -59,5 +59,25 @@ impl Parser {
 	pub fn consume_whitespace(&mut self) {
 		self.consume_while(CharExt::is_whitespace);
 	}
+
+	/// Consume if given test_char is the current char
+	/// Return true if char was consumed, else false
+	pub fn consume_if_char_matches(&mut self, test: char) -> bool {
+		let mut result : bool;
+
+		match self.peek_char() {
+			Some(c) => {
+				if c == test {
+					self.consume_char();
+					result = true;
+				} else {
+					result = false;
+				}
+			}
+			None => {result = false;}
+		}
+
+		result
+	}
 }
 

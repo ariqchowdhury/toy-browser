@@ -5,6 +5,17 @@ mod tests {
 	use super::*;
 
 	#[test]
+	fn parser_consume_char_if_match() {
+		let test_string = "FB";
+		let mut p = parser::Parser::new(test_string.to_string());
+
+		assert!(!p.consume_if_char_matches('f'));
+		assert!(p.consume_if_char_matches('F'));
+		assert!(!p.consume_if_char_matches('f'));
+		assert!(p.consume_if_char_matches('B')); 
+	}
+
+	#[test]
 	fn parser_consume_char() {
 		let test_string = "TeStInG sTrInG";
 		let mut p = parser::Parser::new(test_string.to_string());
