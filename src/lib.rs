@@ -32,6 +32,19 @@ mod tests {
 	}
 
 	#[test]
+	fn parser_consume_whitespace() {
+		let test_string = "     F";
+		let mut p = parser::Parser::new(test_string.to_string());
+
+		let white_str = p.consume_whitespace();
+
+		match p.peek_char() {
+			Some(c) => assert_eq!('F', c),
+			None => println!("Done"),
+		}
+	}
+
+	#[test]
 	fn dom_add_child() {
 		let s: Option<String> = Some("x".to_string());
 		let s2: Option<String> = Some("y".to_string());

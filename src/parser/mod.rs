@@ -32,4 +32,31 @@ impl Parser {
 
 		current_char.next()
 	}
+
+	/// Consume characters until condition is false. Increase cursor
+	/// by number of chars consumed. 
+	/// Return a string of the consumed characters. 
+	fn consume_while<F: Fn(char) -> bool>(&mut self, cond: F) -> String {
+		let mut result = String::new();
+		let mut next_char : char;
+
+		loop {
+			match self.peek_char() {
+				Some(c) => next_char = c,
+				None => break,
+			}
+
+			if cond(next_char) == false { break; }
+			else {
+				result.push(self.consume_char().unwrap());				
+			}
+		}
+
+		result
+	}
+
+	pub fn consume_whitespace(&mut self) {
+		self.consume_while(CharExt::is_whitespace);
+	}
 }
+
