@@ -55,6 +55,7 @@ impl Parser {
 		result
 	}
 
+	/// Consume whitespace characters until non-whitespace char is hit
 	pub fn consume_whitespace(&mut self) {
 		self.consume_while(CharExt::is_whitespace);
 	}
