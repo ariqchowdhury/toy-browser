@@ -1,5 +1,15 @@
 #![feature(core)]
 
+pub fn test_parse_doctype(doctype: &str, is_proper: bool) {
+	let p = parser::Parser::new(doctype.to_string());
+	let mut html = html_parser::HtmlParser::new(p);
+
+	match html.parse_doctype() {
+		Some(_) => assert!(is_proper),
+		None => assert!(!is_proper),
+	}
+}
+
 #[cfg(test)]
 mod tests {
 	use super::*;
@@ -7,13 +17,13 @@ mod tests {
 	#[test]
 	fn html_parse_doctype() {
 		let proper_doctype = "<!DOCTYPE html>";
-		let p = parser::Parser::new(proper_doctype.to_string());
-		let mut html = html_parser::HtmlParser::new(p);
+		test_parse_doctype(proper_doctype, true);
+	}
 
-		match html.parse_doctype() {
-			Some(_) => assert!(true),
-			None => assert!(false),
-		}
+	#[test]
+	fn html_parse_invalid_doctype() {
+		let improper_doctype = "<!DsdfCTYPE html>";
+		test_parse_doctype(improper_doctype, false);
 	}
 
 	#[test]
