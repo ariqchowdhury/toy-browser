@@ -65,6 +65,20 @@ mod tests {
 	}
 
 	#[test]
+	fn parser_end_of_string() {
+		let test_string = "1234567";
+		let mut s = String::new();
+		let mut p = parser::Parser::new(test_string.to_string());
+
+		for _ in 0..7 {
+			s.push(p.consume_char().unwrap());
+		}
+
+		assert!(s == test_string);
+		assert!(p.end_of_string());
+	}
+
+	#[test]
 	fn parser_consume_whitespace() {
 		let test_string = "     F";
 		let mut p = parser::Parser::new(test_string.to_string());

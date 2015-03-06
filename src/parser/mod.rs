@@ -33,6 +33,11 @@ impl Parser {
 		current_char.next()
 	}
 
+	/// Return true if the String is consumed
+	pub fn end_of_string(&mut self) -> bool {
+		self.cursor >= self.input.len()
+	}
+
 	/// Consume characters until condition is false. Increase cursor
 	/// by number of chars consumed. 
 	/// Return a string of the consumed characters. 
