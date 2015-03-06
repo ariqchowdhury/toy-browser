@@ -65,6 +65,10 @@ impl Parser {
 		self.consume_while(CharExt::is_whitespace);
 	}
 
+	pub fn consume_until_whitespace(&mut self) -> String {
+		self.consume_while(|c| !c.is_whitespace())
+	}
+
 	/// Consume if given test_char is the current char
 	/// Return true if char was consumed, else false
 	pub fn consume_if_char_matches(&mut self, test: char) -> bool {
