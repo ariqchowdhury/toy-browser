@@ -17,7 +17,7 @@ pub enum Doctype {
 
 pub struct Document {
 	d_type: Doctype,
-	pub element: Element,
+	pub element: Option<Element>,
 }
 
 /// Elements are nodes in the DOM tree
@@ -41,7 +41,7 @@ impl Document {
 	pub fn new (d_type: Doctype) -> Document {
 		Document {
 			d_type: d_type,
-			element: Element::new_root(ElementType::ClassE),
+			element: None,//Element::new_root(ElementType::ClassE),
 		}
 	}
 }
@@ -50,7 +50,7 @@ impl Element {
 
 	/// Used to create the first Element in the DOM-tree. Called
 	/// when a new Document is created
-	fn new_root (e_type: ElementType) -> Element {
+	pub fn new_root (e_type: ElementType) -> Element {
 		let vec = Vec::new();
 
 		Element {
@@ -76,11 +76,11 @@ impl Element {
 }
 
 /// Print the DOM-tree of the given 'doc' in a readable way
-pub fn pretty_print(doc: &Document) {
+pub fn pretty_print(doc: &mut Document) {
 	println!("Document");
 	println!("|__Doctype: {:?}", doc.d_type);
 
-	pretty_print_element(0, &doc.element);
+	pretty_print_element(0, &doc.element.as_mut().unwrap());
 }
 
 fn pretty_print_element(depth: i32, e: &Element) {
