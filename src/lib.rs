@@ -15,6 +15,11 @@ mod tests {
 	use super::*;
 
 	#[test]
+	fn html_parse_elements() {
+
+	}
+
+	#[test]
 	fn html_parse_doctype() {
 		let proper_doctype = "<!DOCTYPE html>";
 		test_parse_doctype(proper_doctype, true);
@@ -62,6 +67,13 @@ mod tests {
 				None => println!("Done"),
 			}
 		}	
+
+		for _ in 0..14 {
+			match p.peek_next_char() {
+				Some(c) => assert_eq!(test_string.char_at(1), c),
+				None => println!("Done"),
+			}
+		}
 	}
 
 	#[test]
