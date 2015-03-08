@@ -84,16 +84,14 @@ impl HtmlParser {
 		// parse a node
 		// < to >
 		let ele_type = self.parse_node();
-		println!("ele_type: {}", ele_type);
 
 		// if the next thing is not '<', parse until '<'. that is your text
 		let dom_text = self.parse_dom_text();
-		println!("dom_text: {}", dom_text);
 		let t = if dom_text == "" { None } else { Some(dom_text) };
 		
 		// create an element
 		let new_ele = HtmlParser::give_element_type(ele_type.as_slice());
-		println!("new_ele: {:?}", new_ele);
+
 		let mut element : Option<dom_tree::Element>;
 		match new_ele {
 			Some(s) => element = Some(dom_tree::new_element(s, t)),
@@ -108,8 +106,11 @@ impl HtmlParser {
 			if self.parse.end_of_string() {
 				break;
 			}
-			assert!(self.parse.peek_char().unwrap() == '<');
 
+			// tag candidate is either closing a tag or not. 
+			// if its closing ('</ >'), then consume it and break
+			// if its not, it must be another node that needs to be
+			// added
 			if self.parse.peek_next_char().unwrap() == '/' {
 				self.parse.consume_while(|c| c != '>');
 				self.parse.consume_char();
@@ -123,7 +124,5 @@ impl HtmlParser {
 		}
 
 		element
-
 	}
-
 }

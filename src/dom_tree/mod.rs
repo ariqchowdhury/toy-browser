@@ -2,7 +2,7 @@ extern crate std;
 
 use std::fmt;
 
-#[derive(Debug, Copy)]
+#[derive(Debug, Copy, PartialEq)]
 pub enum ElementType {
 	ClassE,
 	Head,
@@ -22,7 +22,7 @@ pub struct Document {
 
 /// Elements are nodes in the DOM tree
 pub struct Element {
-	e_type: ElementType,
+	pub e_type: ElementType,
 	pub text: Option<String>,
 	pub children: Vec<Element>,
 }
