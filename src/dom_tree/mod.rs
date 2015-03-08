@@ -38,11 +38,21 @@ impl fmt::Display for Element {
 }
 
 impl Document {
-	pub fn new (d_type: Doctype) -> Document {
+	pub fn new(d_type: Doctype) -> Document {
 		Document {
 			d_type: d_type,
-			element: None,//Element::new_root(ElementType::ClassE),
+			element: None,
 		}
+	}
+}
+	
+pub fn new_element(e_type: ElementType, text: Option<String>) -> Element {
+	let vec = Vec::new();
+
+	Element {
+		e_type: e_type,
+		text: text,
+		children: vec,
 	}
 }
 
@@ -50,7 +60,7 @@ impl Element {
 
 	/// Used to create the first Element in the DOM-tree. Called
 	/// when a new Document is created
-	pub fn new_root (e_type: ElementType) -> Element {
+	pub fn new_root(e_type: ElementType) -> Element {
 		let vec = Vec::new();
 
 		Element {
@@ -61,7 +71,7 @@ impl Element {
 	}
 
 	/// Add a child element to an element. 'text' is optional. 
-	pub fn add_child (&mut self, e_type: ElementType, text: Option<String>) {
+	pub fn add_child(&mut self, e_type: ElementType, text: Option<String>) {
 		let vec = Vec::new();
 
 		let e = Element {
@@ -70,6 +80,10 @@ impl Element {
 			children: vec,
 		};
 
+		self.children.push(e);
+	}
+
+	pub fn add_child_element(&mut self, e: Element) {
 		self.children.push(e);
 	}
 
