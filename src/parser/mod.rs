@@ -33,6 +33,12 @@ impl Parser {
 		current_char.next()
 	}
 
+	pub fn peek_next_char(&mut self) -> Option<char> {
+		let mut current_char = self.input.chars().skip(self.cursor + 1);
+
+		current_char.next()
+	}
+
 	/// Return true if the String is consumed
 	pub fn end_of_string(&mut self) -> bool {
 		self.cursor >= self.input.len()
