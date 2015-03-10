@@ -111,3 +111,73 @@ fn pretty_print_element(depth: i32, e: &Element) {
 		pretty_print_element(depth + 1, c);
 	}
 }
+
+#[cfg(test)]
+mod test_dom_tree {
+
+	#[test]
+	fn dom_add_child() {
+		let s: Option<String> = Some("x".to_string());
+		let s2: Option<String> = Some("y".to_string());
+		let s3: Option<String> = Some("z".to_string());
+
+		let ss: Option<String> = Some("a".to_string());
+		let ss2: Option<String> = Some("b".to_string());
+		let ss3: Option<String> = Some("c".to_string());
+
+		let mut document = super::Document::new(super::Doctype::Html);
+		document.element = Some(super::Element::new_root(super::ElementType::ClassE));
+		document.element.as_mut().unwrap().add_child(super::ElementType::Title, s);
+		document.element.as_mut().unwrap().add_child(super::ElementType::Head, s2);
+		document.element.as_mut().unwrap().add_child(super::ElementType::Body, s3);
+
+		document.element.as_mut().unwrap().children[1].add_child(super::ElementType::Body, ss);
+		document.element.as_mut().unwrap().children[1].add_child(super::ElementType::Body, ss2);
+		document.element.as_mut().unwrap().children[1].add_child(super::ElementType::Body, ss3);
+
+		assert!(document.element.as_mut().unwrap().children.len() == 3);
+
+		assert!(document.element.as_mut().unwrap().children[0].children.len() == 0);
+		assert!(document.element.as_mut().unwrap().children[1].children.len() == 3);
+		assert!(document.element.as_mut().unwrap().children[2].children.len() == 0);
+
+		assert!(document.element.as_mut().unwrap().children[0].text.is_some());
+		assert!(document.element.as_mut().unwrap().children[1].text.is_some());
+		assert!(document.element.as_mut().unwrap().children[2].text.is_some());
+
+		assert!(document.element.as_mut().unwrap().children[1].children[0].text.is_some());
+		assert!(document.element.as_mut().unwrap().children[1].children[1].text.is_some());
+		assert!(document.element.as_mut().unwrap().children[1].children[2].text.is_some());
+
+		match document.element.as_mut().unwrap().children[0].text {
+			Some(ref s) => if *s != "x" {assert!(false)},
+			None => assert!(false),
+		}
+
+		match document.element.as_mut().unwrap().children[1].text {
+			Some(ref s) => if *s != "y" {assert!(false)},
+			None => assert!(false),
+		}
+
+		match document.element.as_mut().unwrap().children[2].text {
+			Some(ref s) => if *s != "z" {assert!(false)},
+			None => assert!(false),
+		}
+
+		match document.element.as_mut().unwrap().children[1].children[0].text {
+			Some(ref s) => if *s != "a" {assert!(false)},
+			None => assert!(false),
+		}
+
+		match document.element.as_mut().unwrap().children[1].children[1].text {
+			Some(ref s) => if *s != "b" {assert!(false)},
+			None => assert!(false),
+		}
+
+		match document.element.as_mut().unwrap().children[1].children[2].text {
+			Some(ref s) => if *s != "c" {assert!(false)},
+			None => assert!(false),
+		}
+	}
+
+}

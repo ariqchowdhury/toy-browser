@@ -96,3 +96,90 @@ impl Parser {
 	}
 }
 
+#[cfg(test)]
+mod test_parser {
+		#[test]
+	fn parser_consume_char_if_match() {
+		let test_string = "FB";
+		let mut p = super::Parser::new(test_string.to_string());
+
+		assert!(!p.consume_if_char_matches('f'));
+		assert!(p.consume_if_char_matches('F'));
+		assert!(!p.consume_if_char_matches('f'));
+		assert!(p.consume_if_char_matches('B')); 
+	}
+
+	#[test]
+	fn parser_consume_char() {
+		let test_string = "TeStInG sTrInG";
+		let mut p = super::Parser::new(test_string.to_string());
+
+		for i in 0..14 {
+			match p.consume_char() {
+				Some(c) => assert_eq!(test_string.char_at(i), c),
+				None => println!("Done"),
+			}
+		}	
+
+	}
+
+	#[test]
+	fn parser_next_char() {
+		let test_string = "TeStInG sTrInG";
+		let mut p = super::Parser::new(test_string.to_string());
+
+		for _ in 0..14 {
+			match p.peek_char() {
+				Some(c) => assert_eq!(test_string.char_at(0), c),
+				None => println!("Done"),
+			}
+		}	
+
+		for _ in 0..14 {
+			match p.peek_next_char() {
+				Some(c) => assert_eq!(test_string.char_at(1), c),
+				None => println!("Done"),
+			}
+		}
+	}
+
+	#[test]
+	fn parser_end_of_string() {
+		let test_string = "1234567";
+		let mut s = String::new();
+		let mut p = super::Parser::new(test_string.to_string());
+
+		for _ in 0..7 {
+			s.push(p.consume_char().unwrap());
+		}
+
+		assert!(s == test_string);
+		assert!(p.end_of_string());
+	}
+
+	#[test]
+	fn parser_consume_whitespace() {
+		let test_string = "     F";
+		let mut p = super::Parser::new(test_string.to_string());
+
+		p.consume_whitespace();
+
+		match p.peek_char() {
+			Some(c) => assert_eq!('F', c),
+			None => println!("Done"),
+		}
+	}
+
+	#[test]
+	fn parser_consume_while() {
+		let test_string = "stuff in front of <html>";
+		let mut p = super::Parser::new(test_string.to_string());
+
+		p.consume_while(|c| c != '<');
+
+		match p.peek_char() {
+			Some(c) => assert_eq!('<', c),
+			None => println!("Done"),
+		}
+	}
+}
