@@ -3,11 +3,10 @@ use dom_tree;
 use super::stylesheet;
 
 #[allow(dead_code)]
-struct CssParser {
+pub struct CssParser {
 	pub parse: text_parser::TextParser,
 }
 
-#[allow(dead_code)]
 impl CssParser {
 	pub fn new(parser: text_parser::TextParser) -> CssParser {
 		CssParser {
@@ -15,7 +14,7 @@ impl CssParser {
 		}
 	}
 
-	fn parse_selector(&mut self) -> Option<stylesheet::Selector> {
+	pub fn parse_selector(&mut self) -> Option<stylesheet::Selector> {
 		let selector = self.parse.consume_while(|c| !c.is_whitespace() && c != '{');
 
 		match selector.as_slice() {
@@ -29,3 +28,6 @@ impl CssParser {
 		}
 	}
 }
+
+
+	

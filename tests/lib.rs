@@ -3,6 +3,7 @@ extern crate ac_browser;
 use ac_browser::dom_tree;
 use ac_browser::text_parser;
 use ac_browser::html_parser;
+use ac_browser::css;
 
 pub fn test_parse_doctype(doctype: &str, is_proper: bool) {
 	let p = text_parser::TextParser::new(doctype.to_string());
@@ -73,4 +74,27 @@ fn html_parse_elements() {
 
 	assert!(document.element.as_mut().unwrap().children[1].children.len() == 0);
 
+}
+
+fn css_parse_selector(selector_text: &str, should_match: bool) {
+
+	let p = text_parser::TextParser::new(selector_text.to_string());
+	let mut css = css::parser::CssParser::new(p);
+
+	let selector = css.parse_selector();
+
+	assert!(selector.is_some() == should_match);
+
+}
+
+#[test]
+fn parse_title_selector() {
+	css_parse_selector("title", true);
+	css_parse_selector("body", true);
+	css_parse_selector("h1", true);
+	css_parse_selector("h2", true);
+	css_parse_selector("h3", true);
+	css_parse_selector("h4", true);
+
+	css_parse_selector("none", false);
 }
