@@ -97,4 +97,6 @@ fn parse_title_selector() {
 	css_parse_selector("h4", true);
 
 	css_parse_selector("none", false);
+
+	css_parse_selector("title {", true);
 }
