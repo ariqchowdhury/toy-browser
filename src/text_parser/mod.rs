@@ -3,14 +3,14 @@ extern crate std;
 /// Parser input : String is the target to be parsed. cursor keeps track of the
 /// current position in parsing. Parse functions 'consume' characters by 
 /// increasing the cursor. 
-pub struct Parser {
+pub struct TextParser {
 	pub input: String,
 	cursor: usize,
 }
 
-impl Parser {
-	pub fn new(input: String) -> Parser {
-		Parser {
+impl TextParser {
+	pub fn new(input: String) -> TextParser {
+		TextParser {
 			input: input,
 			cursor: 0,
 		}
@@ -101,7 +101,7 @@ mod test_parser {
 		#[test]
 	fn parser_consume_char_if_match() {
 		let test_string = "FB";
-		let mut p = super::Parser::new(test_string.to_string());
+		let mut p = super::TextParser::new(test_string.to_string());
 
 		assert!(!p.consume_if_char_matches('f'));
 		assert!(p.consume_if_char_matches('F'));
@@ -112,7 +112,7 @@ mod test_parser {
 	#[test]
 	fn parser_consume_char() {
 		let test_string = "TeStInG sTrInG";
-		let mut p = super::Parser::new(test_string.to_string());
+		let mut p = super::TextParser::new(test_string.to_string());
 
 		for i in 0..14 {
 			match p.consume_char() {
@@ -126,7 +126,7 @@ mod test_parser {
 	#[test]
 	fn parser_next_char() {
 		let test_string = "TeStInG sTrInG";
-		let mut p = super::Parser::new(test_string.to_string());
+		let mut p = super::TextParser::new(test_string.to_string());
 
 		for _ in 0..14 {
 			match p.peek_char() {
@@ -147,7 +147,7 @@ mod test_parser {
 	fn parser_end_of_string() {
 		let test_string = "1234567";
 		let mut s = String::new();
-		let mut p = super::Parser::new(test_string.to_string());
+		let mut p = super::TextParser::new(test_string.to_string());
 
 		for _ in 0..7 {
 			s.push(p.consume_char().unwrap());
@@ -160,7 +160,7 @@ mod test_parser {
 	#[test]
 	fn parser_consume_whitespace() {
 		let test_string = "     F";
-		let mut p = super::Parser::new(test_string.to_string());
+		let mut p = super::TextParser::new(test_string.to_string());
 
 		p.consume_whitespace();
 
@@ -173,7 +173,7 @@ mod test_parser {
 	#[test]
 	fn parser_consume_while() {
 		let test_string = "stuff in front of <html>";
-		let mut p = super::Parser::new(test_string.to_string());
+		let mut p = super::TextParser::new(test_string.to_string());
 
 		p.consume_while(|c| c != '<');
 

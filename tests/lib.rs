@@ -1,11 +1,11 @@
 extern crate ac_browser;
 
 use ac_browser::dom_tree;
-use ac_browser::parser;
+use ac_browser::text_parser;
 use ac_browser::html_parser;
 
 pub fn test_parse_doctype(doctype: &str, is_proper: bool) {
-	let p = parser::Parser::new(doctype.to_string());
+	let p = text_parser::TextParser::new(doctype.to_string());
 	let mut html = html_parser::HtmlParser::new(p);
 
 	match html.parse_doctype() {
@@ -38,7 +38,7 @@ fn html_parse_elements() {
 			A bunch of text that makes up the body\
 		</body>
 	</html>";
-	let p = parser::Parser::new(test_string.to_string());
+	let p = text_parser::TextParser::new(test_string.to_string());
 	let mut html = html_parser::HtmlParser::new(p);
 	let mut document = dom_tree::Document::new(dom_tree::Doctype::Html);
 	document.element = html.parse_element();

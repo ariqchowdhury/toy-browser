@@ -1,12 +1,12 @@
-use super::parser;
+use super::text_parser;
 use super::dom_tree;
 
 pub struct HtmlParser {
-	pub parse: parser::Parser,	
+	pub parse: text_parser::TextParser,	
 }
 
 impl HtmlParser {
-	pub fn new(parser: parser::Parser) -> HtmlParser {
+	pub fn new(parser: text_parser::TextParser) -> HtmlParser {
 		HtmlParser {
 			parse: parser,
 		}
