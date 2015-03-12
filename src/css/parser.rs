@@ -89,7 +89,6 @@ impl CssParser {
 							prop = Some(self.parse.consume_while(|c| match c {
 								':' => false,
 								_ => true}));
-
 						}
 					}
 				} // Some
@@ -102,5 +101,43 @@ impl CssParser {
 	}
 }
 
+#[test]
+fn test_parse_valid_declaration() {
+	let dec_text = "{ font-size: bold }";
+	let p = text_parser::TextParser::new(dec_text.to_string());
+	let mut css = CssParser::new(p);
 
-	
+	let dec = css.parse_declaration();
+	assert!(dec.is_some());
+	assert!(dec.unwrap().property_name == stylesheet::Property::FontSize);
+}
+
+#[test]
+fn test_parse_invalid_a_declaration() {
+	let dec_text = "{ : bold }";
+	let p = text_parser::TextParser::new(dec_text.to_string());
+	let mut css = CssParser::new(p);
+
+	let dec = css.parse_declaration();
+	assert!(dec.is_none());
+}
+
+#[test]
+fn test_parse_invalid_b_declaration() {
+	let dec_text = "{ font-size  }";
+	let p = text_parser::TextParser::new(dec_text.to_string());
+	let mut css = CssParser::new(p);
+
+	let dec = css.parse_declaration();
+	assert!(dec.is_none());
+}	
+
+#[test]
+fn test_parse_invalid_c_declaration() {
+	let dec_text = "{ font-size ;";
+	let p = text_parser::TextParser::new(dec_text.to_string());
+	let mut css = CssParser::new(p);
+
+	let dec = css.parse_declaration();
+	assert!(dec.is_none());
+}	
