@@ -98,7 +98,7 @@ impl TextParser {
 
 #[cfg(test)]
 mod test_parser {
-		#[test]
+	#[test]
 	fn parser_consume_char_if_match() {
 		let test_string = "FB";
 		let mut p = super::TextParser::new(test_string.to_string());

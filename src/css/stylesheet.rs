@@ -16,8 +16,7 @@ pub enum Selector {
 	SelectorType(dom_tree::ElementType),
 }
 
-#[allow(dead_code)]
-struct Declaration {
+pub struct Declaration {
 	property_name : Property,
 	property_value : Value,
 }
