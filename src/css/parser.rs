@@ -141,3 +141,20 @@ fn test_parse_invalid_c_declaration() {
 	let dec = css.parse_declaration();
 	assert!(dec.is_none());
 }	
+
+#[test]
+fn test_parse_valid_multiline_declaration() {
+	let dec_text = "{ font-size: bold; \
+					   line-height: 23px; }";
+	let p = text_parser::TextParser::new(dec_text.to_string());
+	let mut css = CssParser::new(p);
+
+	let dec_1 = css.parse_declaration();
+	assert!(dec_1.is_some());
+	assert!(dec_1.unwrap().property_name == stylesheet::Property::FontSize);
+
+	let dec_2 = css.parse_declaration();
+	assert!(dec_2.is_some());
+	assert!(dec_2.unwrap().property_name == stylesheet::Property::LineHeight);
+
+}
