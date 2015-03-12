@@ -17,20 +17,20 @@ pub enum Selector {
 }
 
 pub struct Declaration {
-	property_name : Property,
-	property_value : Value,
+	pub property_name : Property,
+	pub property_value : Value,
 }
 
 #[derive(PartialEq)]
 #[allow(dead_code)]
-enum Property {
+pub enum Property {
 	FontSize,
 	LineHeight,
 	Color,
 }
 
 #[allow(dead_code)]
-enum Value {
+pub enum Value {
 	Size(u32, Unit),
 	Length(u32, Unit),
 	ColorValue(Color),
@@ -38,20 +38,20 @@ enum Value {
 }
 
 #[allow(dead_code)]
-enum Unit {
+pub enum Unit {
 	Px,
 }
 
 #[allow(dead_code)]
-struct Color {
+pub struct Color {
 	red: u8,
 	green: u8,
 	blue: u8,
 	alpha: u8,
 }
 
-fn string_to_property(string :&str) -> Option<Property> {
-	match string.as_slice().trim() {
+pub fn string_to_property(string :&str) -> Option<Property> {
+	match string.trim() {
 		"font-size" => Some(Property::FontSize),
 		"line-height" => Some(Property::LineHeight),
 		"color" => Some(Property::Color),
@@ -59,8 +59,8 @@ fn string_to_property(string :&str) -> Option<Property> {
 	}
 }
 
-fn string_to_value(string :&str) -> Option<Value> {
-	match string.as_slice().trim() {
+pub fn string_to_value(string :&str) -> Option<Value> {
+	match string.trim() {
 		_ => Some(Value::Placeholder),
 	}
 }
