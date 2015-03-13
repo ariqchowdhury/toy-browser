@@ -2,14 +2,13 @@ use text_parser;
 use dom_tree;
 use super::stylesheet;
 
-//use std::vec;
-
 pub struct CssParser {
-	pub parse: text_parser::TextParser,
+	parse: text_parser::TextParser,
 }
 
 impl CssParser {
-	pub fn new(parser: text_parser::TextParser) -> CssParser {
+	pub fn new(input: String) -> CssParser {
+		let parser = text_parser::TextParser::new(input);
 		CssParser {
 			parse: parser,
 		}
@@ -114,9 +113,7 @@ impl CssParser {
 
 #[test]
 fn test_parse_valid_declaration() {
-	let dec_text = "{ font-size: bold }";
-	let p = text_parser::TextParser::new(dec_text.to_string());
-	let mut css = CssParser::new(p);
+	let mut css = CssParser::new("{ font-size: bold }".to_string());
 
 	let mut dec = css.parse_declaration();
 	assert_eq!(dec.len(), 1);
@@ -125,9 +122,7 @@ fn test_parse_valid_declaration() {
 
 #[test]
 fn test_parse_invalid_a_declaration() {
-	let dec_text = "{ : bold }";
-	let p = text_parser::TextParser::new(dec_text.to_string());
-	let mut css = CssParser::new(p);
+	let mut css = CssParser::new("{ : bold }".to_string());
 
 	let dec = css.parse_declaration();
 	assert!(dec.is_empty());
@@ -135,9 +130,7 @@ fn test_parse_invalid_a_declaration() {
 
 #[test]
 fn test_parse_invalid_b_declaration() {
-	let dec_text = "{ font-size  }";
-	let p = text_parser::TextParser::new(dec_text.to_string());
-	let mut css = CssParser::new(p);
+	let mut css = CssParser::new("{ font-size  }".to_string());
 
 	let dec = css.parse_declaration();
 	assert!(dec.is_empty());
@@ -145,9 +138,7 @@ fn test_parse_invalid_b_declaration() {
 
 #[test]
 fn test_parse_invalid_c_declaration() {
-	let dec_text = "{ font-size ;";
-	let p = text_parser::TextParser::new(dec_text.to_string());
-	let mut css = CssParser::new(p);
+	let mut css = CssParser::new("{ font-size ;".to_string());
 
 	let dec = css.parse_declaration();
 	assert!(dec.is_empty());
@@ -157,8 +148,7 @@ fn test_parse_invalid_c_declaration() {
 fn test_parse_valid_multiline_declaration() {
 	let dec_text = "{ font-size: bold; \
 					   line-height: 23px; }";
-	let p = text_parser::TextParser::new(dec_text.to_string());
-	let mut css = CssParser::new(p);
+	let mut css = CssParser::new(dec_text.to_string());
 
 	let mut dec = css.parse_declaration();
 	assert_eq!(dec.len(), 2);
@@ -170,9 +160,7 @@ fn test_parse_valid_multiline_declaration() {
 #[test]
 fn test_parse_full_sel_dec_one_line() {
 	let css_text = "h1 { font-size: 12px }";
-
-	let p = text_parser::TextParser::new(css_text.to_string());
-	let mut css = CssParser::new(p);
+	let mut css = CssParser::new(css_text.to_string());
 
 	let mut sel = css.parse_selector();
 	let mut dec = css.parse_declaration();

@@ -78,8 +78,7 @@ fn html_parse_elements() {
 
 fn css_parse_selector(selector_text: &str, should_match: bool) {
 
-	let p = text_parser::TextParser::new(selector_text.to_string());
-	let mut css = css::parser::CssParser::new(p);
+	let mut css = css::parser::CssParser::new(selector_text.to_string());
 
 	let selector = css.parse_selector();
 
