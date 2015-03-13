@@ -182,8 +182,8 @@ fn test_parse_full_sel_dec_one_line() {
 	let css_text = "h1 { font-size: 12px }";
 	let mut css = CssParser::new(css_text.to_string());
 
-	let mut sel = css.parse_selector();
-	let mut dec = css.parse_declaration();
+	let sel = css.parse_selector();
+	let dec = css.parse_declaration();
 
 	assert!(sel.is_some() == true);
 	assert_eq!(dec.len(), 1);
@@ -205,4 +205,32 @@ fn test_full_css_parse_one_line() {
 	assert!(dec.property_value == stylesheet::Value::Placeholder);
 	assert!(sel == stylesheet::Selector::SelectorType(dom_tree::ElementType::Head))
 	
+}
+
+#[test]
+fn test_full_css_parse_multi_line() {
+	let css_text = "h1 {
+						font-size: 12px;
+						line-height: 32px;
+						color: red
+					}";
+	let mut css = CssParser::new(css_text.to_string());	
+
+	let stylesheet = css.parse_css();
+	assert_eq!(stylesheet.ruleset.len(), 3);
+
+	let props = [stylesheet::Property::FontSize, 
+				 stylesheet::Property::LineHeight,
+				 stylesheet::Property::Color];
+
+	for i in 0..3 {
+		let ref rules = stylesheet.ruleset[i];
+		
+		let (sel, ref dec) = rules.rule;
+		
+		assert!(dec.property_name == props[i]);
+		assert!(dec.property_value == stylesheet::Value::Placeholder);
+		assert!(sel == stylesheet::Selector::SelectorType(dom_tree::ElementType::Head));	
+	}
+
 }
