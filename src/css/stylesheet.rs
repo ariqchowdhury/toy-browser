@@ -2,15 +2,25 @@ use dom_tree;
 
 /// A stylesheet contains the rules to apply to the DOM
 #[allow(dead_code)]
-struct StyleSheet {
-	ruleset : Vec<Rule>,
+pub struct StyleSheet {
+	pub ruleset : Vec<Rule>,
+}
+
+impl StyleSheet {
+	pub fn new() -> StyleSheet {
+		let ruleset = Vec::new();
+
+		StyleSheet {
+			ruleset: ruleset,
+		}
+	}
 }
 
 /// A Rule is a tuple of a selector and its matching
 /// declaration 
 #[allow(dead_code)]
-struct Rule {
-	rule: (Selector, Declaration),
+pub struct Rule {
+	pub rule: (Selector, Declaration),
 }
 
 /// A Selector is an element to which style rules apply
@@ -18,6 +28,7 @@ struct Rule {
 /// Only TypeSelectors are currently supported, and are
 /// implemented by matching element types from dom_tree 
 #[derive(Debug, Copy)]
+#[derive(PartialEq)]
 pub enum Selector {
 	SelectorType(dom_tree::ElementType),
 }
@@ -42,6 +53,7 @@ pub enum Property {
 
 /// Supported CSS values to apply to Properties
 #[allow(dead_code)]
+#[derive(PartialEq)]
 pub enum Value {
 	Size(u32, Unit),
 	Length(u32, Unit),
@@ -50,11 +62,13 @@ pub enum Value {
 }
 
 /// Supported units of measurement for CSS
+#[derive(PartialEq)]
 #[allow(dead_code)]
 pub enum Unit {
 	Px,
 }
 
+#[derive(PartialEq)]
 #[allow(dead_code)]
 pub struct Color {
 	red: u8,

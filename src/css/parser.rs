@@ -109,6 +109,26 @@ impl CssParser {
 		} //loop
 		retval
 	}
+
+	pub fn parse_css(&mut self) -> stylesheet::StyleSheet {
+		let mut stylesheet = stylesheet::StyleSheet::new();
+
+		while !self.parse.end_of_string() {
+			let sel = self.parse_selector();
+			let dec = self.parse_declaration();
+
+			if sel.is_none() {
+				continue;
+			}
+
+			for iter in dec {
+				let rule = stylesheet::Rule { rule: (sel.unwrap(), iter)};
+				stylesheet.ruleset.push(rule);
+			}
+		}
+
+		stylesheet
+	}
 }
 
 #[test]
@@ -167,4 +187,22 @@ fn test_parse_full_sel_dec_one_line() {
 
 	assert!(sel.is_some() == true);
 	assert_eq!(dec.len(), 1);
+}
+
+#[test]
+fn test_full_css_parse_one_line() {
+	let css_text = "h1 { font-size: 12px }";
+	let mut css = CssParser::new(css_text.to_string());	
+
+	let stylesheet = css.parse_css();
+	assert_eq!(stylesheet.ruleset.len(), 1);
+
+	let ref rule_one = stylesheet.ruleset[0];
+	
+	let (sel, ref dec) = rule_one.rule;
+	
+	assert!(dec.property_name == stylesheet::Property::FontSize);
+	assert!(dec.property_value == stylesheet::Value::Placeholder);
+	assert!(sel == stylesheet::Selector::SelectorType(dom_tree::ElementType::Head))
+	
 }
