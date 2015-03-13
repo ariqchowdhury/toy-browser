@@ -166,3 +166,17 @@ fn test_parse_valid_multiline_declaration() {
 	assert!(dec.pop().unwrap().property_name == stylesheet::Property::FontSize);
 
 }
+
+#[test]
+fn test_parse_full_sel_dec_one_line() {
+	let css_text = "h1 { font-size: 12px }";
+
+	let p = text_parser::TextParser::new(css_text.to_string());
+	let mut css = CssParser::new(p);
+
+	let mut sel = css.parse_selector();
+	let mut dec = css.parse_declaration();
+
+	assert!(sel.is_some() == true);
+	assert_eq!(dec.len(), 1);
+}
