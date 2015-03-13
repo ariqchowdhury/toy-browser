@@ -234,3 +234,50 @@ fn test_full_css_parse_multi_line() {
 	}
 
 }
+
+#[test]
+fn test_full_css_parse_multi_selects() {
+	let css_text = "h1 {
+						font-size: 12px;
+						line-height: 32px;
+						color: red
+					}
+
+					body {
+						color: red;
+						font-size: 32px;
+						line-height: 34px	
+					}";
+	let mut css = CssParser::new(css_text.to_string());	
+
+	let stylesheet = css.parse_css();
+	assert_eq!(stylesheet.ruleset.len(), 6);
+
+	let props = [stylesheet::Property::FontSize, 
+				 stylesheet::Property::LineHeight,
+				 stylesheet::Property::Color];
+
+	let body_props = [stylesheet::Property::Color, 
+				 	  stylesheet::Property::FontSize,
+					  stylesheet::Property::LineHeight];
+
+	for i in 0..3 {
+		let ref rules = stylesheet.ruleset[i];
+		
+		let (sel, ref dec) = rules.rule;
+		
+		assert!(dec.property_name == props[i]);
+		assert!(dec.property_value == stylesheet::Value::Placeholder);
+		assert!(sel == stylesheet::Selector::SelectorType(dom_tree::ElementType::Head));	
+	}
+
+	for i in 3..6 {
+		let ref rules = stylesheet.ruleset[i];
+		
+		let (sel, ref dec) = rules.rule;
+		
+		assert!(dec.property_name == body_props[i-3]);
+		assert!(dec.property_value == stylesheet::Value::Placeholder);
+		assert!(sel == stylesheet::Selector::SelectorType(dom_tree::ElementType::Body));
+	}
+}
