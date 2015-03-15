@@ -20,7 +20,8 @@ impl StyleSheet {
 /// declaration 
 #[allow(dead_code)]
 pub struct Rule {
-	pub rule: (Selector, Declaration),
+	pub selector: Selector,
+	pub declaration: Declaration,
 }
 
 /// A Selector is an element to which style rules apply
@@ -36,15 +37,15 @@ pub enum Selector {
 /// A declaration is the CSS property and value to 
 /// apply to a selector. 
 /// www.w3.org/TR/CSS2/syndata.html#declaration
+#[derive(Copy)]
 pub struct Declaration {
 	pub property_name : Property,
 	pub property_value : Value,
 }
 
 /// Supported CSS properties
-#[derive(PartialEq)]
 #[allow(dead_code)]
-#[derive(Debug)]
+#[derive(Debug, PartialEq, Copy)]
 pub enum Property {
 	FontSize,
 	LineHeight,
@@ -53,7 +54,7 @@ pub enum Property {
 
 /// Supported CSS values to apply to Properties
 #[allow(dead_code)]
-#[derive(PartialEq)]
+#[derive(PartialEq, Copy)]
 pub enum Value {
 	Size(u32, Unit),
 	Length(u32, Unit),
@@ -62,13 +63,13 @@ pub enum Value {
 }
 
 /// Supported units of measurement for CSS
-#[derive(PartialEq)]
+#[derive(PartialEq, Copy)]
 #[allow(dead_code)]
 pub enum Unit {
 	Px,
 }
 
-#[derive(PartialEq)]
+#[derive(PartialEq, Copy)]
 #[allow(dead_code)]
 pub struct Color {
 	red: u8,

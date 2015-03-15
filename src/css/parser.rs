@@ -122,7 +122,10 @@ impl CssParser {
 			}
 
 			for iter in dec {
-				let rule = stylesheet::Rule { rule: (sel.unwrap(), iter)};
+				let rule = stylesheet::Rule { 
+					selector: sel.unwrap(),
+					declaration: iter,
+				};
 				stylesheet.ruleset.push(rule);
 			}
 		}
