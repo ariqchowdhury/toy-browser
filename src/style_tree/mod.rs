@@ -23,14 +23,8 @@ impl StyleNode {
 	}
 }
 
-fn does_node_match_rule(rule: stylesheet::Rule, node: dom_tree::Element) -> bool {
-	false
-}
-
-fn create_list_of_matching_declarations(rules: Vec<stylesheet::Rule>) -> Vec<stylesheet::Declaration> {
-	let mut retval = Vec::new();
-	let dec = rules[0].declaration;
-	retval.push(dec);
-
-	retval
+fn create_list_of_matching_declarations<'a>(style: &'a stylesheet::StyleSheet, node: dom_tree::Element) 
+										-> Option<&Vec<stylesheet::Declaration>> {
+		
+	style.ruleset.rule_map.get(&stylesheet::Selector::SelectorType(node.e_type))
 }
