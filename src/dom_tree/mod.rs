@@ -2,7 +2,7 @@ extern crate std;
 
 use std::fmt;
 
-#[derive(Debug, Copy, PartialEq)]
+#[derive(Debug, Copy, PartialEq, Hash, Eq)]
 pub enum ElementType {
 	ClassE,
 	Head,

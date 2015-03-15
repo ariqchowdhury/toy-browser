@@ -111,7 +111,7 @@ impl CssParser {
 	}
 
 	pub fn parse_css(&mut self) -> stylesheet::StyleSheet {
-		let mut stylesheet = stylesheet::StyleSheet::new();
+		let mut rule = stylesheet::Rule::new();
 
 		while !self.parse.end_of_string() {
 			let sel = self.parse_selector();
@@ -121,16 +121,12 @@ impl CssParser {
 				continue;
 			}
 
-			for iter in dec {
-				let rule = stylesheet::Rule { 
-					selector: sel.unwrap(),
-					declaration: iter,
-				};
-				stylesheet.ruleset.push(rule);
-			}
+			rule.rule_map.insert(sel.unwrap(), dec);
 		}
 
-		stylesheet
+		stylesheet::StyleSheet {
+			ruleset: rule,
+		}
 	}
 }
 
@@ -198,20 +194,25 @@ fn test_full_css_parse_one_line() {
 	let mut css = CssParser::new(css_text.to_string());	
 
 	let stylesheet = css.parse_css();
-	assert_eq!(stylesheet.ruleset.len(), 1);
+	let rules = &stylesheet.ruleset.rule_map;
+	let head = &stylesheet::Selector::SelectorType(dom_tree::ElementType::Head);
 
-	let ref rule_one = stylesheet.ruleset[0];
-	
-	let (sel, ref dec) = rule_one.rule;
-	
-	assert!(dec.property_name == stylesheet::Property::FontSize);
-	assert!(dec.property_value == stylesheet::Value::Placeholder);
-	assert!(sel == stylesheet::Selector::SelectorType(dom_tree::ElementType::Head))
-	
+	assert!(!rules.is_empty());
+	assert!(rules
+			.contains_key(head));
+
+	let decs = rules.get(head);
+
+	assert!(decs.is_some());
+	assert_eq!(decs.unwrap().len(), 1);
+	assert!(decs.unwrap()[0].property_name == stylesheet::Property::FontSize);
+	assert!(decs.unwrap()[0].property_value == stylesheet::Value::Placeholder);
+
 }
 
 #[test]
 fn test_full_css_parse_multi_line() {
+	let num_decs = 3;
 	let css_text = "h1 {
 						font-size: 12px;
 						line-height: 32px;
@@ -220,26 +221,32 @@ fn test_full_css_parse_multi_line() {
 	let mut css = CssParser::new(css_text.to_string());	
 
 	let stylesheet = css.parse_css();
-	assert_eq!(stylesheet.ruleset.len(), 3);
+	let rules = &stylesheet.ruleset.rule_map;
+	let head = &stylesheet::Selector::SelectorType(dom_tree::ElementType::Head);
+	let decs = rules.get(head);
+
+	assert!(!rules.is_empty());
+	assert!(rules
+			.contains_key(head));
 
 	let props = [stylesheet::Property::FontSize, 
 				 stylesheet::Property::LineHeight,
 				 stylesheet::Property::Color];
 
-	for i in 0..3 {
-		let ref rules = stylesheet.ruleset[i];
-		
-		let (sel, ref dec) = rules.rule;
-		
-		assert!(dec.property_name == props[i]);
-		assert!(dec.property_value == stylesheet::Value::Placeholder);
-		assert!(sel == stylesheet::Selector::SelectorType(dom_tree::ElementType::Head));	
+	assert!(decs.is_some());
+	assert_eq!(decs.unwrap().len(), num_decs);
+
+	for i in 0..num_decs {
+		assert!(decs.unwrap()[i].property_name == props[i]);
+		assert!(decs.unwrap()[i].property_value == stylesheet::Value::Placeholder);
 	}
 
 }
 
 #[test]
 fn test_full_css_parse_multi_selects() {
+	let num_decs = 3;
+
 	let css_text = "h1 {
 						font-size: 12px;
 						line-height: 32px;
@@ -254,7 +261,17 @@ fn test_full_css_parse_multi_selects() {
 	let mut css = CssParser::new(css_text.to_string());	
 
 	let stylesheet = css.parse_css();
-	assert_eq!(stylesheet.ruleset.len(), 6);
+	let rules = &stylesheet.ruleset.rule_map;
+	let head = &stylesheet::Selector::SelectorType(dom_tree::ElementType::Head);
+	let body = &stylesheet::Selector::SelectorType(dom_tree::ElementType::Body);	
+	let decs_head = rules.get(head);
+	let decs_body = rules.get(body);
+
+	assert!(!rules.is_empty());
+	assert!(rules
+			.contains_key(head));
+	assert!(rules
+			.contains_key(body));
 
 	let props = [stylesheet::Property::FontSize, 
 				 stylesheet::Property::LineHeight,
@@ -264,23 +281,18 @@ fn test_full_css_parse_multi_selects() {
 				 	  stylesheet::Property::FontSize,
 					  stylesheet::Property::LineHeight];
 
-	for i in 0..3 {
-		let ref rules = stylesheet.ruleset[i];
-		
-		let (sel, ref dec) = rules.rule;
-		
-		assert!(dec.property_name == props[i]);
-		assert!(dec.property_value == stylesheet::Value::Placeholder);
-		assert!(sel == stylesheet::Selector::SelectorType(dom_tree::ElementType::Head));	
+	assert!(decs_head.is_some());
+	assert!(decs_body.is_some());
+	assert_eq!(decs_head.unwrap().len(), num_decs);
+	assert_eq!(decs_body.unwrap().len(), num_decs);
+
+	for i in 0..num_decs {
+		assert!(decs_head.unwrap()[i].property_name == props[i]);
+		assert!(decs_head.unwrap()[i].property_value == stylesheet::Value::Placeholder);	
 	}
 
-	for i in 3..6 {
-		let ref rules = stylesheet.ruleset[i];
-		
-		let (sel, ref dec) = rules.rule;
-		
-		assert!(dec.property_name == body_props[i-3]);
-		assert!(dec.property_value == stylesheet::Value::Placeholder);
-		assert!(sel == stylesheet::Selector::SelectorType(dom_tree::ElementType::Body));
+	for i in 0..num_decs {
+		assert!(decs_body.unwrap()[i].property_name == body_props[i]);
+		assert!(decs_body.unwrap()[i].property_value == stylesheet::Value::Placeholder);
 	}
 }

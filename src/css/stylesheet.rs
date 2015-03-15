@@ -1,35 +1,33 @@
+use std::collections::HashMap;
+
 use dom_tree;
 
 /// A stylesheet contains the rules to apply to the DOM
-#[allow(dead_code)]
 pub struct StyleSheet {
-	pub ruleset : Vec<Rule>,
+	pub ruleset : Rule,
 }
 
-impl StyleSheet {
-	pub fn new() -> StyleSheet {
-		let ruleset = Vec::new();
+/// A Rule is a dict key'd by a selector, and storing a 
+/// list of declarations
+pub struct Rule {
+	pub rule_map: HashMap<Selector, Vec<Declaration>>,
+}
 
-		StyleSheet {
-			ruleset: ruleset,
+impl Rule {
+	pub fn new() -> Rule {
+		let rule_map = HashMap::new();
+
+		Rule {
+			rule_map: rule_map,
 		}
 	}
-}
-
-/// A Rule is a tuple of a selector and its matching
-/// declaration 
-#[allow(dead_code)]
-pub struct Rule {
-	pub selector: Selector,
-	pub declaration: Declaration,
 }
 
 /// A Selector is an element to which style rules apply
 /// www.w3.org/TR/CSS2/selector.html
 /// Only TypeSelectors are currently supported, and are
 /// implemented by matching element types from dom_tree 
-#[derive(Debug, Copy)]
-#[derive(PartialEq)]
+#[derive(Debug, Copy, PartialEq, Hash, Eq)]
 pub enum Selector {
 	SelectorType(dom_tree::ElementType),
 }
@@ -44,7 +42,6 @@ pub struct Declaration {
 }
 
 /// Supported CSS properties
-#[allow(dead_code)]
 #[derive(Debug, PartialEq, Copy)]
 pub enum Property {
 	FontSize,
