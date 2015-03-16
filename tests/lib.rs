@@ -105,9 +105,10 @@ fn test_build_style_tree() {
 	let mut css = css::parser::CssParser::new(css_text.to_string());	
 	let stylesheet = css.parse_css();
 
-	let mut style = style_tree::StyleNode::new(&document.element.as_mut().unwrap().children[0]);
+	let style = style_tree::StyleNode::new(&document.element.as_mut().unwrap().children[0],
+										   &stylesheet);
 
-	let decs = style.create_list_of_matching_declarations(&stylesheet);
+	let decs = &style.declarations;
 
 	assert!(decs.is_some());
 	assert!(decs.unwrap()[0].property_name == css::stylesheet::Property::FontSize);
