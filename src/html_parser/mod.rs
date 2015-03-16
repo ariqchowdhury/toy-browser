@@ -6,7 +6,8 @@ pub struct HtmlParser {
 }
 
 impl HtmlParser {
-	pub fn new(parser: text_parser::TextParser) -> HtmlParser {
+	pub fn new(input: String) -> HtmlParser {
+		let parser = text_parser::TextParser::new(input);
 		HtmlParser {
 			parse: parser,
 		}

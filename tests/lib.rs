@@ -6,8 +6,7 @@ use ac_browser::html_parser;
 use ac_browser::css;
 
 pub fn test_parse_doctype(doctype: &str, is_proper: bool) {
-	let p = text_parser::TextParser::new(doctype.to_string());
-	let mut html = html_parser::HtmlParser::new(p);
+	let mut html = html_parser::HtmlParser::new(doctype.to_string());
 
 	match html.parse_doctype() {
 		Some(_) => assert!(is_proper),
@@ -39,8 +38,7 @@ fn html_parse_elements() {
 			A bunch of text that makes up the body\
 		</body>
 	</html>";
-	let p = text_parser::TextParser::new(test_string.to_string());
-	let mut html = html_parser::HtmlParser::new(p);
+	let mut html = html_parser::HtmlParser::new(test_string.to_string());
 	let mut document = dom_tree::Document::new(dom_tree::Doctype::Html);
 	document.element = html.parse_element();
 
