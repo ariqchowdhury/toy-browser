@@ -4,6 +4,7 @@ use ac_browser::dom_tree;
 use ac_browser::text_parser;
 use ac_browser::html_parser;
 use ac_browser::css;
+use ac_browser::style_tree;
 
 pub fn test_parse_doctype(doctype: &str, is_proper: bool) {
 	let mut html = html_parser::HtmlParser::new(doctype.to_string());
@@ -72,6 +73,46 @@ fn html_parse_elements() {
 
 	assert!(document.element.as_mut().unwrap().children[1].children.len() == 0);
 
+}
+
+#[test]
+fn test_build_style_tree() {
+	let html_string = 
+	"<html>\
+		<head>\
+			<title>Aliens?\
+			</title>\
+		</head>\
+		<body>\
+			A bunch of text that makes up the body\
+		</body>
+	</html>";
+	let mut html = html_parser::HtmlParser::new(html_string.to_string());
+	let mut document = dom_tree::Document::new(dom_tree::Doctype::Html);
+	document.element = html.parse_element();
+
+	let css_text = "h1 {
+					font-size: 12px;
+					line-height: 32px;
+					color: red
+				}
+
+				body {
+					color: red;
+					font-size: 32px;
+					line-height: 34px	
+				}";
+	let mut css = css::parser::CssParser::new(css_text.to_string());	
+	let stylesheet = css.parse_css();
+
+	let mut style = style_tree::StyleNode::new(&document.element.as_mut().unwrap().children[0]);
+
+	let decs = style.create_list_of_matching_declarations(&stylesheet);
+
+	assert!(decs.is_some());
+	assert!(decs.unwrap()[0].property_name == css::stylesheet::Property::FontSize);
+	assert!(decs.unwrap()[1].property_name == css::stylesheet::Property::LineHeight);
+	assert!(decs.unwrap()[2].property_name == css::stylesheet::Property::Color);
 }
 
 fn css_parse_selector(selector_text: &str, should_match: bool) {
