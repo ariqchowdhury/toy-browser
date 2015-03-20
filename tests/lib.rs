@@ -161,6 +161,37 @@ fn build_style_tree() {
 				}";
 	let mut css = css::parser::CssParser::new(css_text.to_string());	
 	let stylesheet = css.parse_css();
+
+	assert!(document.element.is_some());
+
+	let root = &document.element.as_mut().unwrap();
+	let style_tree = style_tree::build_style_tree(root, &stylesheet);
+
+	assert!(style_tree.get_element().e_type == dom_tree::ElementType::ClassE);
+	assert_eq!(style_tree.children.len(), 2);
+
+	let ch = [&style_tree.children[0], &style_tree.children[1]];
+
+	assert!(ch[0].get_element().e_type == dom_tree::ElementType::Head);
+	assert!(ch[1].get_element().e_type == dom_tree::ElementType::Body);
+
+	assert_eq!(ch[0].children.len(), 1);
+	assert_eq!(ch[1].children.len(), 0);
+
+	let head_decs = &ch[0].declarations;
+
+	assert!(head_decs.is_some());
+	assert!(head_decs.unwrap()[0].property_name == css::stylesheet::Property::FontSize);
+	assert!(head_decs.unwrap()[1].property_name == css::stylesheet::Property::LineHeight);
+	assert!(head_decs.unwrap()[2].property_name == css::stylesheet::Property::Color);
+
+	let body_decs = &ch[1].declarations;	
+
+	assert!(body_decs.is_some());
+	assert!(body_decs.unwrap()[0].property_name == css::stylesheet::Property::Color);
+	assert!(body_decs.unwrap()[1].property_name == css::stylesheet::Property::FontSize);
+	assert!(body_decs.unwrap()[2].property_name == css::stylesheet::Property::LineHeight);
+	
 }
 
 fn css_parse_selector(selector_text: &str, should_match: bool) {

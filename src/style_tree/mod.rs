@@ -29,3 +29,17 @@ impl<'a, 'b> StyleNode<'a, 'b> {
 	}
 }
 
+pub fn build_style_tree<'c, 'd>(root: &'c dom_tree::Element, 
+								style: &'d stylesheet::StyleSheet) -> StyleNode<'c, 'd> {
+
+	StyleNode {
+		element: &root,
+		declarations: style.
+					  ruleset.
+					  rule_map.
+					  get(&stylesheet::Selector::SelectorType(root.e_type)),
+		children: root.children.iter().map(|child| build_style_tree(child, style)).collect(),
+	}
+
+}
+
