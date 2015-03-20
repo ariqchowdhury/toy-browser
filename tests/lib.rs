@@ -76,7 +76,7 @@ fn html_parse_elements() {
 }
 
 #[test]
-fn test_build_style_node() {
+fn build_style_node() {
 	let html_string = 
 	"<html>\
 		<head>\
@@ -105,17 +105,62 @@ fn test_build_style_node() {
 	let mut css = css::parser::CssParser::new(css_text.to_string());	
 	let stylesheet = css.parse_css();
 
-	let style = style_tree::StyleNode::new(&document.element.as_mut().unwrap().children[0],
-										   &stylesheet);
+	let head_node = document.element.as_mut().unwrap().children[0].clone();
+	let head_style = style_tree::StyleNode::new(&head_node,
+										        &stylesheet);
 
-	let decs = &style.declarations;
+	let head_decs = &head_style.declarations;
 
-	assert!(decs.is_some());
-	assert!(decs.unwrap()[0].property_name == css::stylesheet::Property::FontSize);
-	assert!(decs.unwrap()[1].property_name == css::stylesheet::Property::LineHeight);
-	assert!(decs.unwrap()[2].property_name == css::stylesheet::Property::Color);
+	assert!(head_decs.is_some());
+	assert!(head_decs.unwrap()[0].property_name == css::stylesheet::Property::FontSize);
+	assert!(head_decs.unwrap()[1].property_name == css::stylesheet::Property::LineHeight);
+	assert!(head_decs.unwrap()[2].property_name == css::stylesheet::Property::Color);
 
-	assert!(style.get_element().e_type == dom_tree::ElementType::Head);
+	assert!(head_style.get_element().e_type == dom_tree::ElementType::Head);
+
+	let body_node = document.element.as_mut().unwrap().children[1].clone();
+	let body_style = style_tree::StyleNode::new(&body_node,
+										  		&stylesheet);
+
+	let body_decs = &body_style.declarations;
+
+	assert!(body_decs.is_some());
+	assert!(body_decs.unwrap()[0].property_name == css::stylesheet::Property::Color);
+	assert!(body_decs.unwrap()[1].property_name == css::stylesheet::Property::FontSize);
+	assert!(body_decs.unwrap()[2].property_name == css::stylesheet::Property::LineHeight);
+
+	assert!(body_style.get_element().e_type == dom_tree::ElementType::Body);
+}
+
+#[test]
+fn build_style_tree() {
+	let html_string = 
+	"<html>\
+		<head>\
+			<title>Aliens?\
+			</title>\
+		</head>\
+		<body>\
+			A bunch of text that makes up the body\
+		</body>
+	</html>";
+	let mut html = html_parser::HtmlParser::new(html_string.to_string());
+	let mut document = dom_tree::Document::new(dom_tree::Doctype::Html);
+	document.element = html.parse_element();
+
+	let css_text = "h1 {
+					font-size: 12px;
+					line-height: 32px;
+					color: red
+				}
+
+				body {
+					color: red;
+					font-size: 32px;
+					line-height: 34px	
+				}";
+	let mut css = css::parser::CssParser::new(css_text.to_string());	
+	let stylesheet = css.parse_css();
 }
 
 fn css_parse_selector(selector_text: &str, should_match: bool) {
