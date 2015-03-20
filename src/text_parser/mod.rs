@@ -68,7 +68,7 @@ impl TextParser {
 
 	/// Consume whitespace characters until non-whitespace char is hit
 	pub fn consume_whitespace(&mut self) {
-		self.consume_while(CharExt::is_whitespace);
+		self.consume_while(|c| c.is_whitespace());
 	}
 
 	pub fn consume_until_whitespace(&mut self) -> String {
