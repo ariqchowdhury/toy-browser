@@ -76,7 +76,7 @@ fn html_parse_elements() {
 }
 
 #[test]
-fn test_build_style_tree() {
+fn test_build_style_node() {
 	let html_string = 
 	"<html>\
 		<head>\
@@ -114,6 +114,8 @@ fn test_build_style_tree() {
 	assert!(decs.unwrap()[0].property_name == css::stylesheet::Property::FontSize);
 	assert!(decs.unwrap()[1].property_name == css::stylesheet::Property::LineHeight);
 	assert!(decs.unwrap()[2].property_name == css::stylesheet::Property::Color);
+
+	assert!(style.get_element().e_type == dom_tree::ElementType::Head);
 }
 
 fn css_parse_selector(selector_text: &str, should_match: bool) {

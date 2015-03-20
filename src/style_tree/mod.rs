@@ -22,5 +22,10 @@ impl<'a, 'b> StyleNode<'a, 'b> {
 			children: children,
 		}
 	}
+
+	/// return a copy of the dom element contained by this style node
+	pub fn get_element(& self) -> dom_tree::Element {
+		(*self.element).clone()
+	}
 }
 
