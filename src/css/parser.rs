@@ -206,7 +206,7 @@ fn test_full_css_parse_one_line() {
 	assert!(decs.is_some());
 	assert_eq!(decs.unwrap().len(), 1);
 	assert!(decs.unwrap()[0].property_name == stylesheet::Property::FontSize);
-	assert!(decs.unwrap()[0].property_value == stylesheet::Value::Placeholder);
+	assert!(decs.unwrap()[0].property_value == stylesheet::Value::Size(12,stylesheet::Unit::Px));
 
 }
 
@@ -233,12 +233,16 @@ fn test_full_css_parse_multi_line() {
 				 stylesheet::Property::LineHeight,
 				 stylesheet::Property::Color];
 
+	let vals = [stylesheet::Value::Size(12,stylesheet::Unit::Px),
+				stylesheet::Value::Size(32,stylesheet::Unit::Px),
+				stylesheet::Value::Placeholder];
+
 	assert!(decs.is_some());
 	assert_eq!(decs.unwrap().len(), num_decs);
 
 	for i in 0..num_decs {
 		assert!(decs.unwrap()[i].property_name == props[i]);
-		assert!(decs.unwrap()[i].property_value == stylesheet::Value::Placeholder);
+		assert!(decs.unwrap()[i].property_value == vals[i]);
 	}
 
 }
@@ -277,9 +281,17 @@ fn test_full_css_parse_multi_selects() {
 				 stylesheet::Property::LineHeight,
 				 stylesheet::Property::Color];
 
+ 	let vals = [stylesheet::Value::Size(12,stylesheet::Unit::Px),
+				stylesheet::Value::Size(32,stylesheet::Unit::Px),
+				stylesheet::Value::Placeholder];
+
 	let body_props = [stylesheet::Property::Color, 
 				 	  stylesheet::Property::FontSize,
 					  stylesheet::Property::LineHeight];
+
+ 	let body_vals = [stylesheet::Value::Placeholder,
+					 stylesheet::Value::Size(32,stylesheet::Unit::Px),
+					 stylesheet::Value::Size(34,stylesheet::Unit::Px)];					  
 
 	assert!(decs_head.is_some());
 	assert!(decs_body.is_some());
@@ -288,11 +300,11 @@ fn test_full_css_parse_multi_selects() {
 
 	for i in 0..num_decs {
 		assert!(decs_head.unwrap()[i].property_name == props[i]);
-		assert!(decs_head.unwrap()[i].property_value == stylesheet::Value::Placeholder);	
+		assert!(decs_head.unwrap()[i].property_value == vals[i]);	
 	}
 
 	for i in 0..num_decs {
 		assert!(decs_body.unwrap()[i].property_name == body_props[i]);
-		assert!(decs_body.unwrap()[i].property_value == stylesheet::Value::Placeholder);
+		assert!(decs_body.unwrap()[i].property_value == body_vals[i]);
 	}
 }

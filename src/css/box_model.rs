@@ -1,3 +1,4 @@
+#[allow(dead_code)]
 pub struct Box {
 	content: Rectangle,
 	padding: Edges,
@@ -5,14 +6,16 @@ pub struct Box {
 	margin: Edges,
 }
 
+#[allow(dead_code)]
 pub struct Edges {
-	top: f32,
-	bottom: f32,
-	right: f32,
-	left: f32,
+	top: u32,
+	bottom: u32,
+	right: u32,
+	left: u32,
 }
 
+#[allow(dead_code)]
 pub struct Rectangle {
-	height: f32,
-	width: f32,
+	height: u32,
+	width: u32,
 }
