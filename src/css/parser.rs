@@ -235,7 +235,7 @@ fn test_full_css_parse_multi_line() {
 
 	let vals = [stylesheet::Value::Size(12,stylesheet::Unit::Px),
 				stylesheet::Value::Size(32,stylesheet::Unit::Px),
-				stylesheet::Value::Placeholder];
+				stylesheet::Value::Missing];
 
 	assert!(decs.is_some());
 	assert_eq!(decs.unwrap().len(), num_decs);
@@ -283,13 +283,13 @@ fn test_full_css_parse_multi_selects() {
 
  	let vals = [stylesheet::Value::Size(12,stylesheet::Unit::Px),
 				stylesheet::Value::Size(32,stylesheet::Unit::Px),
-				stylesheet::Value::Placeholder];
+				stylesheet::Value::Missing];
 
 	let body_props = [stylesheet::Property::Color, 
 				 	  stylesheet::Property::FontSize,
 					  stylesheet::Property::LineHeight];
 
- 	let body_vals = [stylesheet::Value::Placeholder,
+ 	let body_vals = [stylesheet::Value::Missing,
 					 stylesheet::Value::Size(32,stylesheet::Unit::Px),
 					 stylesheet::Value::Size(34,stylesheet::Unit::Px)];					  
 

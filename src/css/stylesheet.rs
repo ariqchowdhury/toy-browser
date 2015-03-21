@@ -68,7 +68,7 @@ pub enum Property {
 pub enum Value {
 	Size(u32, Unit),
 	ColorValue(Color),
-	Placeholder,
+	Missing,
 }
 
 /// Supported units of measurement for CSS
@@ -117,8 +117,8 @@ pub fn string_to_value(string :&str) -> Option<Value> {
 	let mut parse = text_parser::TextParser::new(input);
 
 	match parse.peek_char() {
-		None => Some(Value::Placeholder),
-		Some(c) if c.is_whitespace() => Some(Value::Placeholder),
+		None => Some(Value::Missing),
+		Some(c) if c.is_whitespace() => Some(Value::Missing),
 		Some(c) if match c {'0'...'9' => true, _ => false,} => {
 
 			let num = parse.consume_while(|c| match c {
@@ -148,15 +148,15 @@ pub fn string_to_value(string :&str) -> Option<Value> {
 
 				match num.parse::<u32>().ok() {
 					Some(n) => Some(Value::Size(n, unit)),
-					None => Some(Value::Placeholder)
+					None => Some(Value::Missing)
 				}
 				
 			} else {
-				Some(Value::Placeholder)
+				Some(Value::Missing)
 			}
 
 		}
-		_ => Some(Value::Placeholder),
+		_ => Some(Value::Missing),
 	}
 }
 
@@ -174,4 +174,20 @@ fn test_string_to_property() {
 fn test_string_to_value() {
 	let val = string_to_value("sdlfj");
 	assert!(val.is_some());
+	assert!(val.unwrap() == Value::Missing);
+}
+
+#[test]
+fn test_value_parsing() {
+	let mut val = string_to_value("12px");
+	assert!(val.unwrap() == Value::Size(12, Unit::Px));
+
+	val = string_to_value("15em");
+	assert!(val.unwrap() == Value::Size(15, Unit::Em));
+
+	val = string_to_value("143cm");
+	assert!(val.unwrap() == Value::Size(143, Unit::Px));
+
+	val = string_to_value("143");
+	assert!(val.unwrap() == Value::Missing);
 }
