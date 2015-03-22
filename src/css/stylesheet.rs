@@ -68,7 +68,15 @@ pub enum Property {
 pub enum Value {
 	Size(u32, Unit),
 	ColorValue(Color),
+	Block(BlockType),
 	Missing,
+}
+
+#[derive(PartialEq, Copy)]
+pub enum BlockType {
+	Inline,
+	Block,
+	None,
 }
 
 /// Supported units of measurement for CSS
@@ -112,51 +120,69 @@ pub fn string_to_property(string :&str) -> Option<Property> {
 
 /// Take a string and match to the Value type. Return None
 /// if no match
-pub fn string_to_value(string :&str) -> Option<Value> {
+pub fn string_to_value(string :&str) -> Value {
 	let input = string.trim().to_string();
 	let mut parse = text_parser::TextParser::new(input);
 
 	match parse.peek_char() {
-		None => Some(Value::Missing),
-		Some(c) if c.is_whitespace() => Some(Value::Missing),
+		None => Value::Missing,
+		Some(c) if c.is_whitespace() => Value::Missing,
 		Some(c) if match c {'0'...'9' => true, _ => false,} => {
-
-			let num = parse.consume_while(|c| match c {
-				'0'...'9' => true,
-				_ => false,
-			});
-
-			let cur_char = parse.peek_char();
-			let next_char = parse.peek_next_char();
-
-			let are_units = || cur_char.is_some() && 
-								next_char.is_some();
-
-			if are_units() {
-				let is_pixel = || {cur_char.unwrap() == 'p' && 
-								   next_char.unwrap() == 'x'};
-				let is_em = || {cur_char.unwrap() == 'e' && 
-								next_char.unwrap() == 'm'};
-
-				let unit = if is_pixel() {
-					Unit::Px
-				} else if is_em() {
-					Unit::Em
-				} else {
-					Unit::Px
-				};
-
-				match num.parse::<u32>().ok() {
-					Some(n) => Some(Value::Size(n, unit)),
-					None => Some(Value::Missing)
-				}
-				
-			} else {
-				Some(Value::Missing)
-			}
-
+			parse_size_units(&mut parse)
 		}
-		_ => Some(Value::Missing),
+		Some(c) if match c {'a'...'z' | 'A'...'Z' => true, _ => false,} => {
+			parse_alpha(&mut parse)
+		}		
+		_ => Value::Missing,
+	}
+}
+
+fn parse_alpha(parse: &mut text_parser::TextParser) -> Value {
+	let val = parse.consume_while(|c| match c {
+			  	'a'...'z' | 'A'...'Z' => true,
+				_ => false
+			  });
+
+	match val.as_slice() {
+		"block" => Value::Block(BlockType::Block),
+		"inline" => Value::Block(BlockType::Inline),
+		_ => Value::Missing,
+	}
+}
+
+fn parse_size_units(parse: &mut text_parser::TextParser) -> Value {
+	let num = parse.consume_while(|c| match c {
+		'0'...'9' => true,
+		_ => false,
+	});
+
+	let cur_char = parse.peek_char();
+	let next_char = parse.peek_next_char();
+
+	let are_units = || cur_char.is_some() && 
+						next_char.is_some();
+
+	if are_units() {
+		let is_pixel = || {cur_char.unwrap() == 'p' && 
+						   next_char.unwrap() == 'x'};
+		let is_em = || {cur_char.unwrap() == 'e' && 
+						next_char.unwrap() == 'm'};
+
+		let unit = if is_pixel() {
+			Unit::Px
+		} else if is_em() {
+			Unit::Em
+		} else {
+			Unit::Px
+		};
+
+		match num.parse::<u32>().ok() {
+			Some(n) => Value::Size(n, unit),
+			None => Value::Missing
+		}
+		
+	} else {
+		Value::Missing
 	}
 }
 
@@ -173,21 +199,20 @@ fn test_string_to_property() {
 #[test]
 fn test_string_to_value() {
 	let val = string_to_value("sdlfj");
-	assert!(val.is_some());
-	assert!(val.unwrap() == Value::Missing);
+	assert!(val == Value::Missing);
 }
 
 #[test]
 fn test_value_parsing() {
 	let mut val = string_to_value("12px");
-	assert!(val.unwrap() == Value::Size(12, Unit::Px));
+	assert!(val == Value::Size(12, Unit::Px));
 
 	val = string_to_value("15em");
-	assert!(val.unwrap() == Value::Size(15, Unit::Em));
+	assert!(val == Value::Size(15, Unit::Em));
 
 	val = string_to_value("143cm");
-	assert!(val.unwrap() == Value::Size(143, Unit::Px));
+	assert!(val == Value::Size(143, Unit::Px));
 
 	val = string_to_value("143");
-	assert!(val.unwrap() == Value::Missing);
+	assert!(val == Value::Missing);
 }

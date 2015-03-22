@@ -48,10 +48,10 @@ impl CssParser {
 			let parsed_prop = stylesheet::string_to_property(&prop.clone().unwrap());
 			let parsed_val = stylesheet::string_to_value(&val.clone().unwrap());
 
-			if parsed_prop.is_some() && parsed_val.is_some() {
+			if parsed_prop.is_some() {
 				dec_list.push(stylesheet::Declaration { 
 					property_name: parsed_prop.unwrap(), 
-					property_value: parsed_val.unwrap()
+					property_value: parsed_val
 				});	
 			} 								
 		}
