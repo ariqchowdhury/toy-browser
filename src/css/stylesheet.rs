@@ -215,4 +215,10 @@ fn test_value_parsing() {
 
 	val = string_to_value("143");
 	assert!(val == Value::Missing);
+
+	val = string_to_value("block");
+	assert!(val == Value::Block(BlockType::Block));
+
+	val = string_to_value("inline");
+	assert!(val == Value::Block(BlockType::Inline));
 }
