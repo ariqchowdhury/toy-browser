@@ -3,15 +3,15 @@ use super::dom_tree;
 
 /// A style node is used to create a parallel tree to the dom tree. Each
 /// node contains a list of css declaration that would apply to the node 
-pub struct StyleNode<'a, 'b> {
+pub struct StyleNode<'a> {
 	element : &'a dom_tree::Element,
-	pub declarations: Option<&'b Vec<stylesheet::Declaration>>,
-	pub children: Vec<StyleNode<'a, 'b>>,
+	pub declarations: Option<&'a Vec<stylesheet::Declaration>>,
+	pub children: Vec<StyleNode<'a>>,
 }
 
-impl<'a, 'b> StyleNode<'a, 'b> {
+impl<'a> StyleNode<'a> {
 
-	pub fn new<'c, 'd>(node: &'c dom_tree::Element, style: &'d stylesheet::StyleSheet) -> StyleNode<'c, 'd> {
+	pub fn new<'c>(node: &'c dom_tree::Element, style: &'c stylesheet::StyleSheet) -> StyleNode<'c> {
 		let children = Vec::new();
 		let decls = 
 			style.ruleset.rule_map.get(&stylesheet::Selector::SelectorType(node.e_type));
@@ -29,8 +29,8 @@ impl<'a, 'b> StyleNode<'a, 'b> {
 	}
 }
 
-pub fn build_style_tree<'c, 'd>(root: &'c dom_tree::Element, 
-								style: &'d stylesheet::StyleSheet) -> StyleNode<'c, 'd> {
+pub fn build_style_tree<'c>(root: &'c dom_tree::Element, 
+							style: &'c stylesheet::StyleSheet) -> StyleNode<'c> {
 
 	StyleNode {
 		element: &root,
