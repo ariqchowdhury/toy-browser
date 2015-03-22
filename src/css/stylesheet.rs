@@ -118,7 +118,7 @@ pub fn string_to_property(string :&str) -> Option<Property> {
 	}
 }
 
-/// Take a string and match to the Value type. Return None
+/// Take a string and match to the Value type. Return Value::Missing
 /// if no match
 pub fn string_to_value(string :&str) -> Value {
 	let input = string.trim().to_string();
