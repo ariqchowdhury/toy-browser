@@ -5,6 +5,7 @@ use ac_browser::text_parser;
 use ac_browser::html_parser;
 use ac_browser::css;
 use ac_browser::style_tree;
+use ac_browser::layout_tree;
 
 pub fn test_parse_doctype(doctype: &str, is_proper: bool) {
 	let mut html = html_parser::HtmlParser::new(doctype.to_string());
@@ -133,7 +134,7 @@ fn build_style_node() {
 }
 
 #[test]
-fn build_style_tree() {
+fn build_style_layout_tree() {
 	let html_string = 
 	"<html>\
 		<head>\
@@ -164,6 +165,7 @@ fn build_style_tree() {
 
 	assert!(document.element.is_some());
 
+	// Build Style Tree	
 	let root = &document.element.as_mut().unwrap();
 	let style_tree = style_tree::build_style_tree(root, &stylesheet);
 
@@ -191,6 +193,11 @@ fn build_style_tree() {
 	assert!(body_decs.unwrap()[0].property_name == css::stylesheet::Property::Color);
 	assert!(body_decs.unwrap()[1].property_name == css::stylesheet::Property::FontSize);
 	assert!(body_decs.unwrap()[2].property_name == css::stylesheet::Property::LineHeight);
+
+
+	// Build Layout Tree
+	let layout_tree = layout_tree::build_layout_tree(&style_tree);
+	assert_eq!(layout_tree.children.len(), 2);
 	
 }
 
