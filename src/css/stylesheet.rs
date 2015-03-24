@@ -48,6 +48,7 @@ pub enum Property {
 	FontSize,
 	LineHeight,
 	Color,
+	Display,
 	MarginTop,
 	MarginBottom,
 	MarginLeft,
@@ -102,6 +103,7 @@ pub fn string_to_property(string :&str) -> Option<Property> {
 		"font-size" => Some(Property::FontSize),
 		"line-height" => Some(Property::LineHeight),
 		"color" => Some(Property::Color),
+		"display" => Some(Property::Display),
 		"margin-top" => Some(Property::MarginTop),
 		"margin-bottom" => Some(Property::MarginBottom),
 		"margin-left" => Some(Property::MarginLeft),
@@ -183,6 +185,19 @@ fn parse_size_units(parse: &mut text_parser::TextParser) -> Value {
 		
 	} else {
 		Value::Missing
+	}
+}
+
+pub fn box_value_from_declaration(decl: &Vec<Declaration>, prop: Property) -> u32 {
+	let val = decl.iter().find(|x| x.property_name == prop);
+	match val {
+		Some(v) => { 
+			match v.property_value {
+				Value::Size(num, _) => num,
+				_ => 0,
+			}
+		}
+		None => 0,
 	}
 }
 

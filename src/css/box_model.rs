@@ -1,17 +1,29 @@
 #[allow(dead_code)]
 pub struct Box {
-	content: Rectangle,
-	padding: Edges,
-	border: Edges,
-	margin: Edges,
+	pub content: Rectangle,
+	pub padding: Edges,
+	pub border: Edges,
+	pub margin: Edges,
+}
+
+impl Box {
+	pub fn default() -> Box {
+		Box {
+			content: Rectangle {height: 0, width: 0},
+			padding: Edges {top: 0, bottom: 0, right: 0, left: 0},
+			border: Edges {top: 0, bottom: 0, right: 0, left: 0},
+			margin: Edges {top: 0, bottom: 0, right: 0, left: 0},
+		}
+	}
+
 }
 
 #[allow(dead_code)]
 pub struct Edges {
-	top: u32,
-	bottom: u32,
-	right: u32,
-	left: u32,
+	pub top: u32,
+	pub bottom: u32,
+	pub right: u32,
+	pub left: u32,
 }
 
 #[allow(dead_code)]
