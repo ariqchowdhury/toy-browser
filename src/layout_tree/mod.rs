@@ -41,6 +41,14 @@ impl<'a> LayoutNode<'a> {
 	/// exceed parent width. Pass self's content down. 
 	fn layout_block(&mut self, parent_dimension: box_model::Rectangle) {
 		self.calculate_width(parent_dimension);
+		self.calculate_position(parent_dimension);
+
+		let cont = &mut self.layout_box.content;
+		for child in &mut self.children {
+			child.layout_block(*cont);
+			cont.height = cont.height + child.layout_box.content.height;
+		}
+		
 	}
 
 	/// Calculate width of a box, constraining for parent width. Set self

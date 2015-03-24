@@ -1,3 +1,4 @@
+#[derive(Copy)]
 pub struct Box {
 	pub content: Rectangle,
 	pub padding: Edges,
@@ -17,6 +18,7 @@ impl Box {
 
 }
 
+#[derive(Copy)]
 pub struct Edges {
 	pub top: u32,
 	pub bottom: u32,
@@ -24,6 +26,7 @@ pub struct Edges {
 	pub left: u32,
 }
 
+#[derive(Copy)]
 pub struct Rectangle {
 	/// x position of the rectangle, relative to a (0,0) origin at
 	/// the top left of the parent container
